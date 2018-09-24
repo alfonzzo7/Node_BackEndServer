@@ -4,6 +4,8 @@ var bcrypt = require('bcryptjs');
 
 var mdAuth = require('../middlewares/auth');
 
+var fs = require('fs');
+
 // Inicializar variables
 var app = express();
 
@@ -155,6 +157,14 @@ app.delete('/:id', mdAuth.verificaToken, (req, res) => {
             }
 
             usuarioBorrado.password = ':-)';
+
+            // Eliminamos imagen
+            var oldPath = `./uploads/usuarios/${usuarioBorrado.img}`;
+
+            // Si existe imagen anterior se elimina
+            if (fs.existsSync(oldPath)) {
+                fs.unlinkSync(oldPath);
+            }
 
             res.status(200).json({
                 ok: true,

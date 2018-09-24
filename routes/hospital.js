@@ -3,6 +3,8 @@ var express = require('express');
 
 var mdAuth = require('../middlewares/auth');
 
+var fs = require('fs');
+
 // Inicializar variables
 var app = express();
 
@@ -142,6 +144,14 @@ app.delete('/:id', mdAuth.verificaToken, (req, res) => {
                     mensaje: `Hospital con el id ${id} no existe`,
                     errors: { message: 'No existe un hospital con ese ID' }
                 });
+            }
+
+            // Eliminamos imagen
+            var oldPath = `./uploads/hospitales/${usuarioBorrado.img}`;
+
+            // Si existe imagen anterior se elimina
+            if (fs.existsSync(oldPath)) {
+                fs.unlinkSync(oldPath);
             }
 
             res.status(200).json({
