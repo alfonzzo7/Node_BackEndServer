@@ -128,7 +128,7 @@ function buscarMedicos(busqueda, regex, desde) {
 
 function buscarUsuarios(busqueda, regex, desde) {
     return new Promise((resolve, reject) => {
-        Usuario.find({}, 'nombre email role')
+        Usuario.find({}, 'nombre email role img google')
             .or([{ 'nombre': regex }, { 'email': regex }])
             .skip(desde)
             .limit(5)
