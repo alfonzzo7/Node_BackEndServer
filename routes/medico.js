@@ -190,7 +190,7 @@ app.delete('/:id', mdAuth.verificaToken, (req, res) => {
             }
 
             // Eliminamos imagen
-            var oldPath = `./uploads/medicos/${usuarioBorrado.img}`;
+            var oldPath = `./uploads/medicos/${medicoBorrado.img}`;
 
             // Si existe imagen anterior se elimina
             if (fs.existsSync(oldPath)) {

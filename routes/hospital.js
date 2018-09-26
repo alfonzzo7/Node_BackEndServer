@@ -21,7 +21,7 @@ app.get('/', (req, res, next) => {
     Hospital.find({})
         .skip(desde)
         .limit(5)
-        .populate('usuario', 'nombre email')
+        .populate('usuario', 'nombre email img google')
         .exec(
             (err, hospitales) => {
                 if (err) {
@@ -46,6 +46,39 @@ app.get('/', (req, res, next) => {
                         hospitales: hospitales,
                         total: total
                     });
+                });
+            });
+});
+
+//=============================================================
+// Obtener hospital por ID
+//=============================================================
+app.get('/:id', (req, res, next) => {
+    var id = req.params.id;
+
+    Hospital.findById(id)
+        .populate('usuario', 'nombre email img google')
+        .exec(
+            (err, hospital) => {
+                if (err) {
+                    return res.status(500).json({
+                        ok: false,
+                        mensaje: 'Error cargando hospital',
+                        errors: err
+                    });
+                }
+
+                if (!hospital) {
+                    return res.status(400).json({
+                        ok: false,
+                        mensaje: `Hospital con el id ${id} no existe`,
+                        errors: { message: 'No existe un hospital con ese ID' }
+                    });
+                }
+
+                res.status(200).json({
+                    ok: true,
+                    hospital: hospital
                 });
             });
 });
@@ -147,7 +180,7 @@ app.delete('/:id', mdAuth.verificaToken, (req, res) => {
             }
 
             // Eliminamos imagen
-            var oldPath = `./uploads/hospitales/${usuarioBorrado.img}`;
+            var oldPath = `./uploads/hospitales/${hospitalBorrado.img}`;
 
             // Si existe imagen anterior se elimina
             if (fs.existsSync(oldPath)) {

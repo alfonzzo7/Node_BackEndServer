@@ -104,7 +104,7 @@ function subirPorTipo(tipo, id, fileName, path, res) {
 
                 hospital.img = fileName;
 
-                hospital.save((err, Actualizado) => {
+                hospital.save((err, hospitalActualizado) => {
                     if (err) {
                         // Eliminar archivo
                         fs.unlinkSync(path);
@@ -118,7 +118,7 @@ function subirPorTipo(tipo, id, fileName, path, res) {
                     return res.status(200).json({
                         ok: true,
                         mensaje: 'Imagen de hospital actualizada',
-                        hospital: Actualizado
+                        hospital: hospitalActualizado
                     });
                 });
             });
