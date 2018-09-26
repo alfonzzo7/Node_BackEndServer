@@ -18,8 +18,9 @@ app.get('/', (req, res, next) => {
     var desde = req.query.desde || 0;
     desde = Number(desde);
 
-    var todos = req.query.todos;
-    if (todos) {
+    var todos = req.query.todos || 'n';
+
+    if (todos === 's') {
         Hospital.find({})
             .populate('usuario', 'nombre email img google')
             .exec(
