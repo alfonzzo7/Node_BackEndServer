@@ -18,21 +18,12 @@ app.get('/', (req, res, next) => {
     var desde = req.query.desde || 0;
     desde = Number(desde);
 
-    Hospital.find({})
-        .skip(desde)
-        .limit(5)
-        .populate('usuario', 'nombre email img google')
-        .exec(
-            (err, hospitales) => {
-                if (err) {
-                    return res.status(500).json({
-                        ok: false,
-                        mensaje: 'Error cargando hospitales',
-                        errors: err
-                    });
-                }
-
-                Hospital.count({}, (err, total) => {
+    var todos = req.query.todos;
+    if (todos) {
+        Hospital.find({})
+            .populate('usuario', 'nombre email img google')
+            .exec(
+                (err, hospitales) => {
                     if (err) {
                         return res.status(500).json({
                             ok: false,
@@ -41,13 +32,54 @@ app.get('/', (req, res, next) => {
                         });
                     }
 
-                    res.status(200).json({
-                        ok: true,
-                        hospitales: hospitales,
-                        total: total
+                    Hospital.count({}, (err, total) => {
+                        if (err) {
+                            return res.status(500).json({
+                                ok: false,
+                                mensaje: 'Error cargando hospitales',
+                                errors: err
+                            });
+                        }
+
+                        res.status(200).json({
+                            ok: true,
+                            hospitales: hospitales,
+                            total: total
+                        });
                     });
                 });
-            });
+    } else {
+        Hospital.find({})
+            .skip(desde)
+            .limit(5)
+            .populate('usuario', 'nombre email img google')
+            .exec(
+                (err, hospitales) => {
+                    if (err) {
+                        return res.status(500).json({
+                            ok: false,
+                            mensaje: 'Error cargando hospitales',
+                            errors: err
+                        });
+                    }
+
+                    Hospital.count({}, (err, total) => {
+                        if (err) {
+                            return res.status(500).json({
+                                ok: false,
+                                mensaje: 'Error cargando hospitales',
+                                errors: err
+                            });
+                        }
+
+                        res.status(200).json({
+                            ok: true,
+                            hospitales: hospitales,
+                            total: total
+                        });
+                    });
+                });
+    }
 });
 
 //=============================================================
